@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 dataset = pd.read_csv(Path("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/dataset_2020.csv"))
 
 dataset = dataset.assign(Time=pd.to_datetime(dataset.date)).drop('id', axis='columns') # filter by date to datetime / columns
-print(dataset.head(3)) # testing if the dataset heads can be printed 
+print(dataset.head(5)) # testing if the dataset heads can be printed 
 
 # Elon Musk tweets statistics:
 sns.set_style("darkgrid")
@@ -37,3 +37,17 @@ print("\n")
 print("Photo frequency :\n",dataset['video'].notnull().value_counts() / len(dataset))
 print("\n")
 print("Photo frequency :\n",dataset['photos'].notnull().value_counts() / len(dataset))
+
+
+# Top retweet resources of Elon Musk:
+# Loading different file because the other does not contain resources from retweets
+dataset = pd.read_csv(Path("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/data_elonmusk.csv"))
+
+dataset = dataset.assign(Time=pd.to_datetime(dataset.Time)).drop('row ID', axis='columns') # filter by date to datetime / columns
+#print(dataset.head(3))
+
+# get head(100) top 100 tweeter sources of Elon Musk
+dataset['Retweet from'].value_counts().head(10).plot.bar(figsize=(21,11),fontsize=16,color='yellow')
+plt.gca().set_title('@Elonmusk top retweet sources  (first 10 retweets) ',fontsize=20)
+plt.gca().set_xticklabels(plt.gca().get_xticklabels(),rotation=45,ha='right',fontsize=14)
+plt.show()
