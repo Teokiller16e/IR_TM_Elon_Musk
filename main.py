@@ -3,7 +3,9 @@ import os
 import re
 import nltk
 import sklearn
+import matplotlib.pyplot as plt
 
+from wordcloud import WordCloud
 from nltk.corpus.reader import tagged
 from nltk.tokenize import word_tokenize, sent_tokenize, PunktSentenceTokenizer
 from nltk.corpus import stopwords, state_union
@@ -39,6 +41,18 @@ custom_sent_tokenizer = PunktSentenceTokenizer(train_text)
 # Vesion of nltk and sklearn
 # print('The nltk version is {}.'.format(nltk.__version__))
 # print('The scikit-learn version is {}.'.format(sklearn.__version__))
+
+def create_word_cloud(data):
+    # TODO Play With Parameters
+    width = 100
+    height = 100
+    random_state = 21
+    max_font_size = 100
+
+    words = " ".join([word for word in data])
+    word_cloud = WordCloud(width=width, height=height, random_state=random_state, max_font_size=max_font_size).generate(words)
+    return word_cloud
+
 
 # POS Function :
 def process_content(tokenized):
@@ -150,3 +164,24 @@ with open(tweets_dataset, "r", encoding="utf-8") as file:
 # Reading case of
 # dataset = pd.read_csv("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/elonmusk_tweets.csv", "rt", error_bad_lines=False)
 # print(dataset.head(5))
+
+
+# Apply Word Cloud
+fig = plt.figure(figsize=(30, 30), dpi=20)
+reddit_word_cloud = create_word_cloud(reddit_tokennized)
+speeches_word_cloud = create_word_cloud(speeches_tokenized)
+tweets_word_cloud = create_word_cloud(tweets_tokenized)
+
+fig.add_subplot(1, 3, 1)
+plt.imshow(reddit_word_cloud, interpolation="bilinear")
+plt.title("Reddit")
+plt.axis("off")
+fig.add_subplot(1, 3, 2)
+plt.imshow(speeches_word_cloud, interpolation="bilinear")
+plt.title("Speeches")
+plt.axis("off")
+fig.add_subplot(1, 3, 3)
+plt.imshow(tweets_word_cloud, interpolation="bilinear")
+plt.title("Tweets")
+plt.axis("off")
+plt.show()
