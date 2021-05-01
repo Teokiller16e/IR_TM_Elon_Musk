@@ -18,7 +18,6 @@ import os
 # inserted the 2020 dataset just because the 2021 is half so it doesn't really make any difference
 #dataset = pd.read_csv(Path("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/dataset_2020.csv"))
 tweets_dataset = os.path.join(os.path.curdir, 'Datasets', 'txt_files', 'tweets', 'dataset_2020.csv')
-
 dataset = pd.read_csv(tweets_dataset)
 dataset = dataset.assign(Time=pd.to_datetime(dataset.date)).drop('id', axis='columns') # filter by date to datetime / columns
 print(dataset.head(5)) # testing if the dataset heads can be printed 
@@ -54,7 +53,6 @@ print("Photo frequency :\n",dataset['photos'].notnull().value_counts() / len(dat
 #dataset = pd.read_csv(Path("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/data_elonmusk.csv"))
 tweets_dataset = os.path.join(os.path.curdir, 'Datasets', 'txt_files', 'tweets', 'data_elonmusk.csv')
 dataset = pd.read_csv(tweets_dataset)
-
 dataset = dataset.assign(Time=pd.to_datetime(dataset.Time)).drop('row ID', axis='columns') # filter by date to datetime / columns
 #print(dataset.head(3))
 
