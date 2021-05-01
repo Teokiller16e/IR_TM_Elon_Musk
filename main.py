@@ -30,6 +30,7 @@ ftweets = FreqDist()
 punctuation = re.compile(r'[-.?!,:;()[0-9]')
 url = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 urls = []
+
 # PunktSentenceTokenizer is an unsupervised machine learning model that we can either train or use the pretrained one
 train_text = state_union.raw("2005-GWBush.txt")
 sample_text = state_union.raw("2006-GWBush.txt")

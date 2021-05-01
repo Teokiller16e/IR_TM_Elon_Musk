@@ -19,6 +19,7 @@ with open("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon
 
     custom_sent_tokenizer = PunktSentenceTokenizer(train_text)
     #custom_speeches_tokenizer = PunktSentenceTokenizer(speeches)
+    
 # POS Function :
 def process_content(tokenized):
     try:
