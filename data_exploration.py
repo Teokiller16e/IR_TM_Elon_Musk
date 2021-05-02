@@ -7,12 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt 
 import os
 
-
-
-
-
-
-
+# TODO: Add more details about retweets/num_of_likes etc.
 
 
 # inserted the 2020 dataset just because the 2021 is half so it doesn't really make any difference
