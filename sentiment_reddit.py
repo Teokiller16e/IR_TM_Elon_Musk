@@ -12,31 +12,21 @@ from wordcloud import WordCloud
 from nltk.corpus import twitter_samples
 from textblob import TextBlob as tb
 
-stopwords = stopwords.words("english")
-lemmatizer = WordNetLemmatizer()
-punctuation = re.compile(r'[-.?!,:;()[0-9]')
+# punctuation = re.compile(r'[-.?!,:;()[0-9]')
 
 
 def preprocess(reply):
     reply = word_tokenize(reply)
     clean_reply = ""
     for word in reply:
-        if word.lower() not in stopwords:
-            word = lemmatizer.lemmatize(word)
-            word = punctuation.sub("", word)
-            clean_reply += word + " "
+        clean_reply += word + " "
     return clean_reply
-
-
-def sentiment_analysis(reply):
-    reply = preprocess(reply)
-    sentiment = tb.sentiment(reply)
-    return sentiment.polarity
 
 
 replies = []
 polarities = []
 scores = []
+subjectivities = []
 reddit = praw.Reddit(client_id="retmTurNtUpV4g",
                      client_secret="ytQWmu0VzUfH4DWicHIALd10EUQHkg",
                      username="irtmproject2021",
@@ -52,18 +42,42 @@ for id in ids:
         for reply in comment.replies:
             if reply.author == user:
                 replies.append(reply)
+
 for reply in replies:
     body = preprocess(reply.body)
     body = tb(body)
     polarity = body.sentiment.polarity
     score = reply.score
+    subjectivity = body.sentiment.subjectivity
     polarities.append(polarity)
     scores.append(score)
+    subjectivities.append(subjectivity)
 
 plt.figure()
+positives = 0
+neutral = 0
+negatives = 0
 for i in range(0, len(scores)):
+    if polarities[i] > 0:
+        positives += 1
+    elif polarities[i] == 0:
+        neutral += 1
+    else:
+        negatives += 1
     plt.scatter(polarities[i], scores[i], color="Blue")
 plt.title("Sentiment Analysis vs Upvotes")
 plt.xlabel("Polarity")
-plt.ylabel("Upvotes score")
+plt.ylabel("Upvotes Score")
 plt.show()
+
+fig = plt.figure()
+for i in range(0, len(scores)):
+    plt.scatter(polarities[i], subjectivities[i], color="Blue")
+plt.title("Sentiment Analysis")
+plt.xlabel("Polarity")
+plt.ylabel("Subjectivity")
+plt.show()
+
+print("There are", positives, "positives")
+print("There are", negatives, "negatives")
+print("There are", neutral, "neutrals")
