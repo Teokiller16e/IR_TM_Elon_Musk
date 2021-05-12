@@ -37,7 +37,6 @@ for idx, day in enumerate(days_of_year):
 df = pd.DataFrame({"weekday": weekday, "week": week, "activity": days_of_year})
 df.drop_duplicates(subset=["weekday", "week"], inplace=True)
 df = df.pivot(columns="week", index="weekday", values="activity")
-print(df.values)
 Weekday, Week = np.mgrid[:df.shape[0]+1, :df.shape[1]+1]
 fig, ax = plt.subplots(figsize=(12, 4))
 ax.set_aspect("equal")
