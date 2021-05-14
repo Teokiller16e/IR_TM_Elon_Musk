@@ -78,3 +78,37 @@ plt.title("Sentiment Analysis")
 plt.xlabel("Polarity")
 plt.ylabel("Subjectivity")
 plt.show()
+
+
+# Andrea ta stopwords exoun ola ta negation mesa opote eftiaksa by hand thn default lista pou tha xrisimopoiisoume gia na gleitwnoume lekseis kai parallila na mhn exei tis
+# arniseis mesa ( an deis to nltk.corpus stopwords exei couldn't,shouldn't ect και τα χρειαζόμαστε αυτά)
+"""
+# Remove repetitions in tokenized sentences:
+sentences = word_tokenize(speeches)
+
+duplicates = []
+cleaned = []
+for s in sentences:
+    if s in cleaned:
+        if s in duplicates:
+            continue
+        else:
+            duplicates.append(s)
+    else:
+        cleaned.append(s)
+
+# We use the cleaned list for the text that doesn't contain duplicates
+
+# Remove stop words, with holding negations:
+stopwords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+              "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself",
+              "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these",
+              "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do",
+              "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
+              "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
+              "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again",
+              "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each",
+              "few", "more", "most", "other", "some", "such", "only", "own", "same", "so", "than",
+              "too", "very", "s", "t", "can", "will", "just", "should", "now"]
+
+"""

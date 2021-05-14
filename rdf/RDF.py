@@ -2,6 +2,17 @@ from rdflib import Graph, Literal, RDF, URIRef, namespace
 from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 import matplotlib.pyplot as plt 
 import networkx as nx
+import io
+import pydotplus
+from IPython.display import display, Image
+from rdflib.tools.rdf2dot import rdf2dot
+
+def visualize(g):
+    stream = io.StringIO()
+    rdf2dot(g, stream, opts = {display})
+    dg = pydotplus.graph_from_dot_data(stream.getvalue())
+    png = dg.create_png()
+    display(Image(png))
 
 # More information query commands SELECT,CONSTRUCT,DESCRIBE,ASK
 # https://medium.com/@atakanguney94/introduction-to-resource-description-framework-and-sparql-rdf-101-5857f4a6a8a6 
@@ -9,46 +20,29 @@ import networkx as nx
 # TODO : networkx plugin--> a) Remove duplicate Elon Musk, b) Shrink entities, c)Check turtle format to remove greek / probably not necessary
 
 graph = Graph()
-result = graph.parse('http://dbpedia.org/resource/Elon_Musk',format='turtle')
 
-final_graph = rdflib_to_networkx_multidigraph(result)
+elon = URIRef('http://dbpedia.org/resource/Elon_Musk')
+space_x = URIRef('http://dbpedia.org/resource/SpaceX')
+tesla = URIRef('http://dbpedia.org/resource/Tesla')
+nasa = URIRef('http://dbpedia.org/resource/NASA')
+openAI = URIRef('https://dbpedia.org/page/OpenAI')
 
-# Number of nodes 1296 and number of edges 1564:
-print(len(final_graph)) # nodes
-print(final_graph.number_of_edges()) # edges
+graph.add((elon,RDF.type,namespace.FOAF.Person))
+graph.add((elon,namespace.DCTERMS['founder'],tesla))
+graph.add((elon,namespace.DCTERMS['founder'],space_x))
 
-# 1920 * 1080 / 1296 = 1600 --> sqrt(1600) = 40 pixels for each of the graph nodes
 
-# Plot Networkx instance of RDF Graph:
-pos = nx.spring_layout(final_graph,scale=2,seed=1)
-edge_labels = nx.get_edge_attributes(final_graph,'r')
-nx.draw_networkx_edge_labels(final_graph,pos,edge_labels)
-#nx.draw_network_edge_labels(final_graph,pos,edge_labels)
+graph.serialize(format='turtle').decode('u8')
 
-nx.draw(final_graph,with_labels=True,node_size=1)
+G = rdflib_to_networkx_multidigraph(graph)
 
+# Plot Networkx instance of RDF Graph
+pos = nx.spring_layout(G, scale=2,seed=14)
+edge_labels = nx.get_edge_attributes(G, 'r')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+nx.draw(G, with_labels=True)
+
+#if not in interactive mode for 
 plt.show()
 
-# Iterating through all subjects, predicates and objects
-for index,(sub, pred, obj) in enumerate(graph):
-    print(sub)
-    if index == 20:
-        break
 
-#print(f' The graph has {len(graph)} facts')
-
-# Print out the entire RDF graph in turtle format:
-#print(graph.serialize(format= 'ttl').decode('u8'))
-
-"""
-# new :
-graph2 = Graph()
-mason = URIRef("http://example.org/mason")
-
-# Add triples using store's add() method.
-graph2.add((mason,RDF.type,namespace.FOAF.Person))
-graph2.add((mason,namespace.FOAF.nick, Literal("mason",lang="en")))
-graph2.add((mason,namespace.FOAF.name,Literal("Mason Carter")))
-graph2.add((mason,namespace.FOAF.mbox,URIRef("mailto:mason@example.org")))
-
-"""

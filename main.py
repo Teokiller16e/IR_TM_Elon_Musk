@@ -99,8 +99,7 @@ def create_word_cloud(data):
     max_font_size = 100
 
     words = " ".join([word for word in data])
-    word_cloud = WordCloud(width=width, height=height, random_state=random_state, max_font_size=max_font_size).generate(
-        words)
+    word_cloud = WordCloud(width=width, height=height, random_state=random_state, max_font_size=max_font_size).generate(words)
     return word_cloud
 
 
@@ -112,7 +111,7 @@ def process_content(tokenized):
             tagged = nltk.pos_tag(words)
             print(tagged)
 
-            chunkGram = r"""Chunk:{<JJ.?>*}"""
+            chunkGram = r"""NP:{<DT>?<JJ>*<NN>} VP:{<VBD>?<TO><VB>?}"""
 
             chunkParser = nltk.RegexpParser(chunkGram)
             chunked = chunkParser.parse(tagged)
