@@ -1,10 +1,7 @@
 from io import StringIO
-import matplotlib
 import numpy as np 
 import os 
 from nltk.tokenize import word_tokenize, sent_tokenize
-import emoji # we will continue that with tweets and possible hashtags and emoji
-import re
 from collections import Counter
 import matplotlib.pyplot as plt
 
