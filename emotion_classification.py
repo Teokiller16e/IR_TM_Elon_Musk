@@ -42,7 +42,8 @@ plt.show()
 #text_field = "".join(df['Text'].astype(str))
 
 
-# Text cleaning and preprocessing :
+# Text cleaning and preprocessing :'
+
 df['Clean_Text'] = df['Text'].apply(nfx.remove_punctuations)
 df['Clean_Text'] = df['Clean_Text'].apply(nfx.remove_userhandles)
 stopwords = ["I", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
@@ -61,17 +62,17 @@ df['Clean_Text'] = df['Clean_Text'].apply(lambda x: ' '.join([word for word in x
 
 
 
-
-
+print(df.shape[0])
+df = df.drop_duplicates()
 # Machine Learning Classification
 # Naive Bayes/Logistic Regression/KNN/Decision Tree
-training_data = df['Clean_Text']
+training_data = df['Clean_Text'] # remove duplicates
 yLabels = df['Emotion']
 
 counter_vect = CountVectorizer()
 xData = counter_vect.fit_transform(training_data)
 
-x_train,x_test,y_train,y_test = train_test_split(xData,yLabels, test_size=0.1, random_state=None) #random state indicates the suffling of the data
+x_train,x_test,y_train,y_test = train_test_split(xData,yLabels, test_size=0.2, random_state=42) #random state indicates the suffling of the data
 
 # Build machine learning model:
 bayes_model = MultinomialNB()
@@ -81,14 +82,24 @@ bayes_model.score(x_test,y_test)
 # Predictions of emotions:
 predictions = bayes_model.predict(x_test)
 
-sample_text = ["Glad that I am back home mom"] # Here we can open the dataset to a different dataframe and loop through tokenized sentences so we can predict all of them and hold a counter for the probabilities
+sample_text = ["I really love playing voleyball with my friends at the beach"] # Here we can open the dataset to a different dataframe and loop through tokenized sentences so we can predict all of them and hold a counter for the probabilities
 vect_test = counter_vect.transform(sample_text).toarray() # if we don't convert to an numpy array it will not receive the input 
 
 # Make actual prediction :
-print(bayes_model.predict(vect_test))
+final_pred = bayes_model.predict(vect_test)
+print("Final prediction : ",final_pred)
+
 # Prediction accuracy percentage : 
-print(bayes_model.classes_)
-print(bayes_model.predict_proba(vect_test))
+classes = bayes_model.classes_
+classes = np.reshape(classes,(5,1))
+
+results = bayes_model.predict_proba(vect_test)
+results = np.reshape(results,(5,1))
+for i,val in enumerate(results):
+    print(classes[i]," probability : %.2f%%"%(val*100))
+
+# Precision, Recall & F1 score summarization
+
 
 
 # Compare SparkNLP / NLU John Snows Lab
