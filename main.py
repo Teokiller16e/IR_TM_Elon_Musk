@@ -1,11 +1,11 @@
 import pandas as pd
+import numpy as np
 import praw
 import os
 import re
 import nltk
 import sklearn
 import matplotlib.pyplot as plt
-
 from wordcloud import WordCloud
 from nltk.corpus.reader import tagged
 from nltk.tokenize import word_tokenize, sent_tokenize, PunktSentenceTokenizer
@@ -14,7 +14,7 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.probability import FreqDist
 from nltk import pos_tag
 from nltk.util import bigrams, trigrams, ngrams
-
+from PIL import Image
 # Need to run this the first time
 # nltk.download('punkt')
 # nltk.download('wordnet')
@@ -24,7 +24,10 @@ from nltk.util import bigrams, trigrams, ngrams
 # GLOBAL VARIABLES
 speeches_dataset = os.path.join(os.path.curdir, 'Datasets', 'txt_files', 'Elon_Musk_Dataset.txt')
 tweets_dataset = os.path.join(os.path.curdir, 'Datasets', 'txt_files', 'tweets', 'elonmusk_tweets.csv')
+image = os.path.join(os.path.curdir, 'images', 'rocket_white_3.jpg')
+
 stopwords = stopwords.words("english")
+
 lemmatizer = WordNetLemmatizer()
 ps = PorterStemmer()
 freddit = FreqDist()
@@ -33,7 +36,7 @@ ftweets = FreqDist()
 punctuation = re.compile(r'[-.?!,:;()[0-9]')
 url = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 urls = []
-
+mask = np.array(Image.open(image))
 # PunktSentenceTokenizer is an unsupervised machine learning model that we can either train or use the pretrained one
 train_text = state_union.raw("2005-GWBush.txt")
 sample_text = state_union.raw("2006-GWBush.txt")
@@ -91,7 +94,7 @@ def tweet_cleaning(tweets):
     return tweets
 
 
-def create_word_cloud(data):
+def create_word_cloud(data, mask):
     # TODO Play With Parameters
     width = 100
     height = 100
@@ -99,7 +102,7 @@ def create_word_cloud(data):
     max_font_size = 100
 
     words = " ".join([word for word in data])
-    word_cloud = WordCloud(width=width, height=height, random_state=random_state, max_font_size=max_font_size).generate(
+    word_cloud = WordCloud(mask=mask, background_color='white', max_words=1000, max_font_size=max_font_size, width=mask.shape[1], height=mask.shape[0], random_state=random_state).generate(
         words)
     return word_cloud
 
@@ -131,6 +134,7 @@ def preprocess(dataset):
     pos = []
     for word in dataset:
         if word.lower() not in stopwords:
+
             word = lemmatizer.lemmatize(word)
             word = punctuation.sub("", word)
             dataset_clean.append(punctuation.sub("", word))
@@ -168,7 +172,6 @@ def get_reddit_replies():
 
 
 elons_reddit_replies = get_reddit_replies()
-
 reddit_tokennized = word_tokenize(elons_reddit_replies)
 reddit_cleaned, reddit_pos = preprocess(reddit_tokennized)
 for token in reddit_cleaned:
@@ -178,6 +181,13 @@ print(freddit.most_common(20))
 urls += re.findall(url, elons_reddit_replies)
 find_biggest_frequent_phrase(elons_reddit_replies, "Reddit", 1)
 
+words = " ".join([word for word in reddit_tokennized])
+    # wc = WordCloud(background_color='black',max_words=1000,mask=mask, max_font_size=90,random_state=42)
+    # reddit_cloud = wc.generate(words)
+    # plt.imshow(reddit_cloud, interpolation='bilinear')
+    # plt.axis('off')
+    # plt.show()
+    # exit()
 # print(reddit_pos)
 # End of Reddit
 
@@ -187,6 +197,7 @@ with open(speeches_dataset, "r") as file:
     speeches = "".join(file.readlines()[0:])
 speeches_tokenized = word_tokenize(speeches)
 speeches_cleaned, speeches_pos = preprocess(speeches_tokenized)
+
 for token in speeches_cleaned:
     if token not in "'''``":
         fspeeches[token.lower()] += 1
@@ -216,7 +227,7 @@ print(ftweets.most_common(20))
 find_biggest_frequent_phrase(tweets, "Tweeter", 2)
 # print(tweets_pos)
 print(urls)
-tokenized_sentences = sent_tokenize(tweets)
+# tokenized_sentences = sent_tokenize(tweets)
 # checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(converted_row)
 # checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(sample_text)
 # process_content(checked_unsupervised_tokenizer)  # call part of speech tagging function
@@ -229,26 +240,23 @@ find_common_tokens(freddit, fspeeches, ftweets)
 
 # Apply Word Cloud
 fig = plt.figure(figsize=(10, 10), dpi=80)
-reddit_word_cloud = create_word_cloud(reddit_tokennized)
-speeches_word_cloud = create_word_cloud(speeches_tokenized)
-tweets_word_cloud = create_word_cloud(tweets_tokenized)
+reddit_word_cloud = create_word_cloud(reddit_tokennized, mask)
+speeches_word_cloud = create_word_cloud(speeches_tokenized, mask)
+tweets_word_cloud = create_word_cloud(tweets_tokenized, mask)
 
-# fig.add_subplot(1, 3, 1)
 plt.imshow(reddit_word_cloud, interpolation="bilinear")
-plt.title("Reddit")
+plt.title("Reddit", fontsize=40)
 plt.axis("off")
 plt.show()
 fig = plt.figure(figsize=(10, 10), dpi=80)
 
-# fig.add_subplot(1, 3, 2)
 plt.imshow(speeches_word_cloud, interpolation="bilinear")
-plt.title("Speeches")
+plt.title("Speeches",fontsize=40)
 plt.axis("off")
 plt.show()
 fig = plt.figure(figsize=(10, 10), dpi=80)
 
-# fig.add_subplot(1, 3, 3)
 plt.imshow(tweets_word_cloud, interpolation="bilinear")
-plt.title("Tweets")
+plt.title("Tweets",fontsize=40)
 plt.axis("off")
 plt.show()
