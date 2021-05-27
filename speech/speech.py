@@ -1,5 +1,6 @@
 import re
 import nltk
+import os
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
@@ -11,7 +12,8 @@ from nltk.stem import WordNetLemmatizer
 stop_words = stopwords.words('english')
 lemmatizer = WordNetLemmatizer()
 
-with open("../Datasets/txt_files/Elon_Musk_Dataset.txt", "r") as file:
+filename = os.path.join(os.path.pardir, 'Datasets', 'txt_files', 'Elon_Musk_Dataset.txt')
+with open(filename, "r") as file:
     speeches = "".join(file.readlines()[0:])
 lemmatized_speeches = []
 speeches = re.sub(r'[^\w\s]', '', speeches)  # cleaning

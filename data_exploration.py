@@ -10,8 +10,6 @@ import matplotlib.pyplot as plt
 import os
 import datetime
 
-# TODO: Add more details about retweets/num_of_likes etc.
-
 
 # inserted the 2020 dataset just because the 2021 is half so it doesn't really make any difference
 # dataset = pd.read_csv(Path("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/dataset_2020.csv"))

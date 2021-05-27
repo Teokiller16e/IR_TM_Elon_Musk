@@ -129,6 +129,7 @@ def display_percentages(list1, list2):
     plt.title('Percentages of each class')
     plt.show()
 
+
 df, perc_true, perc_pred = evaluate_sent()
 display_evaluation(df)
 display_percentages(perc_true, perc_pred)

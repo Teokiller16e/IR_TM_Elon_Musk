@@ -19,12 +19,12 @@ rates = []
 tbrates = []
 
 def give_rates():
-    output = os.path.join(os.path.curdir, 'rates.txt')
+    output = os.path.join(os.path.curdir, 'emotions.txt')
     out = open(output, 'w')
     for id, tweet in enumerate(tweets_df.head(100)):
         print(tweet)
-        rate = input("Rate the polarity of the tweet:  ")
-        temp = "" + str(id) + ".: " + str(rate) + "\n"
+        rate = input("Give emotion for this tweet:  ")
+        temp = "" + str(id) + "." + str(tweet) + ": " + str(rate) + "\n"
         out.write(temp)
 
 
@@ -88,6 +88,7 @@ def find_kappa_distance(mean_rates, tweets_df):
     print(k_score)
     print(distance)
 
+give_rates()
 
 
 
