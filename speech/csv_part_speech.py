@@ -26,10 +26,9 @@ def process_content(tokenized):
         for i in tokenized:
             words = nltk.word_tokenize(i)
             tagged = nltk.pos_tag(words)
-            print(tagged)
 
-            chunkGram = r"""Chunk:{<JJ.?>*}"""
-            
+            chunkGram = r"""NP:{<DT>?<JJ>*<NN>}""" #VP:{<VBD>?<TO><VB>?}
+
             chunkParser = nltk.RegexpParser(chunkGram)
             chunked = chunkParser.parse(tagged)
             chunked.draw()
@@ -77,8 +76,8 @@ with open("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon
 #    for word in lemmatized_speeches:
 #        print(ps.stem(word))
 
-    #checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(converted_row)
-    checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(sample_text)
+    checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(converted_row)
+    #checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(sample_text)
     process_content(checked_unsupervised_tokenizer) # call part of speech tagging function
 
 # Reading case of 
