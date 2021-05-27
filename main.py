@@ -216,9 +216,10 @@ find_biggest_frequent_phrase(tweets, "Tweeter", 2)
 # print(tweets_pos)
 print(urls)
 tokenized_sentences = sent_tokenize(tweets)
-# checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(converted_row)
-# checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(sample_text)
-# process_content(checked_unsupervised_tokenizer)  # call part of speech tagging function
+
+#checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(converted_row)
+checked_unsupervised_tokenizer = custom_sent_tokenizer.tokenize(sample_text)
+process_content(checked_unsupervised_tokenizer)  # call part of speech tagging function
 
 # Reading case of
 # dataset = pd.read_csv("F:/Downloads/Practice_Projects/Natural_Language_Processing/IR_TM_Elon_Musk/Datasets/txt_files/tweets/elonmusk_tweets.csv", "rt", error_bad_lines=False)
